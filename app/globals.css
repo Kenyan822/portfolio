@@ -1,3 +1,20 @@
+/**
+ * Global Styles
+ * 
+ * 技術スタック: Tailwind CSS 4, CSS Custom Properties
+ * 
+ * このファイルは、サイト全体に適用されるグローバルスタイルを定義します。
+ * - Tailwind CSSのインポート
+ * - CSS変数によるテーマ管理（ライト/ダークモード）
+ * - スムーズスクロールの設定
+ * - ベースフォントの設定
+ * 
+ * 実装のポイント:
+ * - Tailwind CSS 4の新しい@import構文を使用
+ * - CSS変数でテーマを管理し、ダークモードに対応
+ * - prefers-color-schemeメディアクエリでシステム設定に応じた自動切り替え
+ */
+
 @import "tailwindcss";
 
 :root {
@@ -19,8 +36,12 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
