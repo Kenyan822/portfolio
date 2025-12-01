@@ -1,53 +1,90 @@
 # コンポーネント設計 (Component Design)
 
-React/Next.js 開発では、画面を小さな部品（コンポーネント）に分けて開発します。
-これにより、コードの再利用性が高まり、管理しやすくなります。
+## 0. デザインコンセプト (Design Concept)
 
-## 1. 共通コンポーネント (Common Components)
+macOS のデザイン原則にインスパイアされた、洗練されたダークモードポートフォリオ。
 
-サイト全体で使い回す基本的な部品です。
+- **Core Theme**: Dark Mode, Sleek & Luxurious
+- **Visual Style**: Glassmorphism (Frosted glass), Glowing elements, Subtle gradients
+- **Key Principles**: Depth, Layering, Modern Typography
+
+## 1. デザインシステム & 共通 UI (Design System & UI)
+
+基本的な UI コンポーネントは、グラスモーフィズムと発光表現（Glow）を基調とします。
+
+### Atoms (基本要素) `components/ui/`
+
+- **GlassCard** (`components/ui/GlassCard.tsx`)
+
+  - アプリケーション全体の基本となるコンテナ。
+  - 半透明の背景 (rgba)、`backdrop-filter: blur`, 繊細な白いボーダーラインを持つ。
+  - レイヤー構造を意識し、背景のダークカラーの上に浮いているように表現。
+
+- **Button** (`components/ui/Button.tsx`)
+
+  - **Primary**: わずかなグラデーションと発光（Glow）効果を持つ CTA ボタン。ホバー時に光が強まる。
+  - **Secondary**: ガラスのような透明感のあるボタン。ボーダーのみ、または薄い背景色。
+
+- **Typography**
+
+  - **GradientText**: ヒーローセクションのタイトルなどで使用する、洗練されたグラデーションテキスト。
+  - Font Family: Inter, SF Pro Display などのモダンなサンセリフ体を使用。
+
+- **Decorations**
+  - **AmbientGlow**: 背景に配置する、ぼんやりとした色の光源（Blob）。奥行きを演出する。
+
+## 2. レイアウトコンポーネント (Layout Components) `components/layout/`
 
 - **Header** (`components/layout/Header.tsx`)
-  - ロゴ、ナビゲーションメニューを表示。
-- **Footer** (`components/layout/Footer.tsx`)
-  - コピーライト、SNS リンクなどを表示。
-- **Button** (`components/ui/Button.tsx`)
-  - 統一されたデザインのボタン。primary, secondary などのバリエーションを持つ。
-- **Container** (`components/ui/Container.tsx`)
-  - 画面幅を制限し、中央寄せするためのレイアウト用ラッパー。
 
-## 2. ページ固有コンポーネント (Page Specific Components)
+  - 画面上部に固定されるナビゲーションバー。
+  - 強いすりガラス効果 (`backdrop-filter`) を適用し、スクロール時にコンテンツが背後を流れる macOS のような演出。
+
+- **Footer** (`components/layout/Footer.tsx`)
+
+  - シンプルな構成。透過度を下げ、メインコンテンツを邪魔しないデザイン。
+
+- **Container** (`components/ui/Container.tsx`)
+  - コンテンツ幅を制御するラッパー。
+
+## 3. 機能・ページ固有コンポーネント (Feature Components) `components/features/`
 
 ### トップページ (/)
 
-- **HeroSection**
-  - メインビジュアル。キャッチコピーと「ポートフォリオを見る」等の CTA ボタン。
-- **FeatureWorks**
-  - 実績の一部を抜粋して表示するセクション。
+- **HeroSection** (`components/features/home/HeroSection.tsx`)
 
-### 実績関連 (/works, /works/[id])
+  - 画面中央に配置。
+  - 大きなタイポグラフィ（GradientText）と、背景でゆっくり動く AmbientGlow を組み合わせる。
+  - ガラスのような質感の 3D 要素やアイコンをアクセントにする。
 
-- **WorkCard**
-  - 実績一覧で使うカード型コンポーネント。サムネイル画像、タイトル、短い説明を表示。
-- **WorkDetail**
-  - 実績詳細ページで使う、画像スライダーや詳細テキストを表示するエリア。
+- **FeatureWorks** (`components/features/home/FeatureWorks.tsx`)
+  - WorkCard をグリッドまたはカルーセルで表示。
 
-### その他
+### 実績関連 (/works)
 
-- **SectionTitle**
-  - 各セクションの見出し（About, Skills, Works など）のデザインを統一するためのコンポーネント。
+- **WorkCard** (`components/features/works/WorkCard.tsx`)
 
-## ディレクトリ構造案 (src/components)
+  - **GlassCard** をベースにしたカード。
+  - ホバー時に枠線が光る、またはカード全体がわずかに浮き上がるアニメーション。
+  - サムネイル画像は角丸を大きくし、高品質な印象を与える。
+
+- **WorkDetail** (`components/features/works/WorkDetail.tsx`)
+  - 実績詳細表示。
+  - 没入感を高めるため、背景を暗く落とし、コンテンツ（画像・テキスト）を浮かび上がらせる。
+
+## 4. ディレクトリ構造案 (src/components)
 
 ```text
 components/
-├── layout/       # ヘッダー、フッターなど配置に関わるもの
+├── layout/       # ヘッダー、フッター
 │   ├── Header.tsx
 │   └── Footer.tsx
-├── ui/           # ボタン、入力フォームなど汎用的なUI部品
+├── ui/           # デザインシステムに基づく最小単位のUI
+│   ├── GlassCard.tsx   # 重要: コンテナの基本
 │   ├── Button.tsx
-│   └── Container.tsx
-└── features/     # 特定の機能やページに紐づく大きな部品
+│   ├── Typography.tsx  # GradientTextなどをエクスポート
+│   └── AmbientGlow.tsx # 背景装飾用
+└── features/     # ページごとの機能ブロック
     ├── works/
     │   ├── WorkCard.tsx
     │   └── WorkList.tsx
@@ -55,7 +92,8 @@ components/
         └── HeroSection.tsx
 ```
 
-## 学習ポイント
+## 実装のヒント (Tailwind CSS)
 
-- **Atomic Design**: 厳密でなくても良いが、「汎用的な UI 部品」と「特定の機能を持つ部品」を分ける意識を持つこと。
-- **Props (プロップス)**: 親コンポーネントから子コンポーネントへデータを渡す仕組み（例: ボタンの文字、実績のタイトルなど）。
+- **Glassmorphism**: `bg-white/10 backdrop-blur-md border border-white/20`
+- **Glow Effect**: `shadow-[0_0_15px_rgba(59,130,246,0.5)]` (色はアクセントカラーに合わせる)
+- **Dark Background**: `bg-[#0a0a0a]` や `bg-slate-950` など、純粋な黒よりわずかに明るい色または深い青/グレー推奨。
